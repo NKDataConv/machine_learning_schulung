@@ -4,7 +4,7 @@ from sklearn import tree, metrics
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from MachineLearningSportwetten.__datenmanagement_cls import x, y, quotas, dat
+from soccer_datenmanagement_cls import x, y, quotas, dat
 from _utils.multiclass_prediction_from_probabilities import multiclass_prediction_from_probabilities
 
 
@@ -23,8 +23,8 @@ cls = tree.DecisionTreeClassifier(min_samples_split = 3,
 cls.fit(X=x_train, y=y_train)
 
 # --- Make Plot (can be removed when different models are build
-tree.plot_tree(cls)
-plt.show()
+# tree.plot_tree(cls)
+# plt.show()
 
 # --- Make prediction
 probabilities = cls.predict_proba(x_test)
