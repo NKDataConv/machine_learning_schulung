@@ -22,13 +22,16 @@ df_pred_vali = pd.DataFrame({'actual': y_vali,
                         'prediction': y_pred_vali})
 df_pred_vali["correct"] = df_pred_vali["actual"] == df_pred_vali["prediction"]
 anzahl_richtig = df_pred_vali["correct"].sum()
-print("Auf Trainingsdaten wurden ", anzahl_richtig, " von ", len(df_pred_vali), " richtig klassifiziert.")
+print("Auf Validierungsdaten wurden ", anzahl_richtig, " von ", len(df_pred_vali), " richtig klassifiziert.")
 print("Accuracy: ", anzahl_richtig / len(df_pred_vali))
 
-from sklearn.tree import plot_tree
-import matplotlib.pyplot as plt
-plot_tree(cls,
-          feature_names=x_train.columns,
-          filled=True,
-          fontsize=5)
-plt.show(block=True)
+# from sklearn.tree import plot_tree
+# import matplotlib.pyplot as plt
+# plot_tree(cls,
+#           feature_names=x_train.columns,
+#           filled=True,
+#           fontsize=5)
+# plt.show(block=True)
+
+df_features = pd.DataFrame({"features": cls.feature_importances_,
+                            "columns": x_train.columns})
