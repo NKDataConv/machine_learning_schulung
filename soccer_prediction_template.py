@@ -6,7 +6,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from soccer_datenmanagement_cls import x, y, quotas, dat
 from _utils.multiclass_prediction_from_probabilities import multiclass_prediction_from_probabilities
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
+import mlflow
 
+
+mlflow.start_run()
 
 # --- Splitting for getting training and test datasets. Also quotas object is splitted, which is required
 # for model-evaluation later on.
@@ -15,12 +21,14 @@ x_train, x_test, y_train, y_test, quotas_train, quotas_test = train_test_split(x
                                                     quotas,
                                                     test_size=0.4,
                                                     random_state=9)
-
 # --- Make classification
-cls = tree.DecisionTreeClassifier(max_depth=9,
-                                  max_features=6,
-                                  min_samples_split=200,
-                                  random_state=9)
+PARAMS = {"n_neighbors": 5,
+          "weights": "uniform"}
+
+for param in PARAMS:
+    mlflow.log_param(param, PARAMS[param])
+
+cls = KNeighborsClassifier(**PARAMS)
 cls.fit(X=x_train, y=y_train)
 
 # --- Make Plot (can be removed when different models are build
@@ -39,7 +47,7 @@ probabilities.set_index(x_test.index, inplace=True)
 
 # Cutoffs - Here the minimum of probability can be set for each category.
 # Example: The model must assign at least a probability of xyz in order to make a prediction.
-cutoffs = {'1': 0.5, '0': 0.7, '2': 0.5}
+cutoffs = {'1': 0.4, '0': 0.6, '2': 0.4}
 
 # Create prediction of result-tendency of the game
 probabilities['predicted'] = multiclass_prediction_from_probabilities(
@@ -93,3 +101,7 @@ print("Percent correct bets: " + str(probabilities['correct_bet'].mean().round(2
 print("Average quota in game: " + str(probabilities['quota_in_game'].mean().round(2)))
 print("Average quota predicted: " + str(probabilities['quota_predicted'].mean().round(2)))
 print("Win/Loss: " + str(probabilities['win'].sum().round(2)))
+
+mlflow.log_metric("Gewinn", probabilities['win'].sum())
+
+mlflow.end_run()
