@@ -6,14 +6,23 @@ df = df.dropna()
 
 df.RainToday.unique()
 
-rain_mapping = {"No": 0, "Yes": 1}
-df["RainToday"] = df["RainToday"].map(rain_mapping)
-df["RainTomorrow"] = df["RainTomorrow"].map(rain_mapping)
+# rain_mapping = {"No": 0, "Yes": 1}
+# df["RainToday"] = df["RainToday"].map(rain_mapping)
+# df["RainTomorrow"] = df["RainTomorrow"].map(rain_mapping)
+
+# alternative:
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+le.fit(df["RainToday"])
+df["RainToday"] = le.transform(df["RainToday"])
+df["RainTomorrow"] = le.transform(df["RainTomorrow"])
 
 risk_mm = df["RISK_MM"]
 y = df["RainTomorrow"]
 
-df = df.drop(columns=["RISK_MM", "RainTomorrow", "Date", "Location", "WindGustDir", "WindDir9am", "WindDir3pm"])
+df = df.drop(columns=["RISK_MM", "RainTomorrow", "Date", "WindGustDir", "WindDir9am", "WindDir3pm"])
+
+df = pd.get_dummies(df)
 
 from sklearn.model_selection import train_test_split
 
