@@ -2,9 +2,10 @@ from datenmanagement_wetter import x_train, x_vali, x_test, risk_mm_vali, risk_m
 import pandas as pd
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.ensemble import GradientBoostingRegressor
 
-PARAMS = {"max_depth": 5}
-reg = DecisionTreeRegressor(**PARAMS)
+PARAMS = {"n_estimators": 20, "max_features": 4, "max_depth": 3}
+reg = GradientBoostingRegressor(**PARAMS)
 reg.fit(X=x_train, y=risk_mm_train)
 
 predictions_train = reg.predict(x_train)

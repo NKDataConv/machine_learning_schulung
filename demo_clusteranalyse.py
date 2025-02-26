@@ -4,7 +4,7 @@
 import numpy as np
 import plotly.express as px
 from sklearn.datasets import load_iris
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN, Birch
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 
@@ -26,7 +26,8 @@ y_true = iris.target    # Die wahren Klassenlabels, NUR zur Auswertung/Illustrat
 # Wir skalieren daher alle 4 Features. (Die Visualisierung erfolgt jedoch später
 # auf den Originalwerten der ersten beiden Features.)
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)  # 4D-Daten für das Clustering
+scaler.fit(X)  # 4D-Daten für das Clustering
+X_scaled = scaler.transform(X)  # 4D-Daten für das Clustering
 
 
 # ================================
@@ -36,11 +37,11 @@ X_scaled = scaler.fit_transform(X)  # 4D-Daten für das Clustering
 #  - n_clusters = 3 (da wir wissen, dass Iris theoretisch 3 Arten hat)
 #  - n_init = 10 (KMeans wird 10-mal neu gestartet; das beste Ergebnis wird gewählt)
 #  - random_state = 42 (zur Reproduzierbarkeit)
-kmeans = KMeans(n_clusters=3, n_init=10, random_state=42)
-kmeans.fit(X_scaled)
+cluster = DBSCAN()
+cluster.fit(X_scaled)
 
 # Die Cluster-Zugehörigkeiten für jeden Datenpunkt
-cluster_labels = kmeans.labels_
+cluster_labels = cluster.labels_
 
 
 # ================================
